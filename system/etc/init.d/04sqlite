@@ -1,0 +1,36 @@
+#!/system/bin/sh
+
+LOG_FILE=/data/local/04sqlite.log
+busybox rm -f $LOG_FILE
+busybox touch $LOG_FILE
+
+run_flag=$(date +"%u")
+if [ $# -ge 1 ] ; then
+    :
+elif [ ! "$run_flag" -eq 7 ] ; then
+    echo "" | busybox tee -a $LOG_FILE
+    echo "--> $( date +"%m-%d-%Y %H:%M:%S" ) not Sunday,exit!!" | busybox tee -a $LOG_FILE
+    exit 1
+fi
+
+#/data /dbdata /datadata  /sdcard/
+if [ -d "/data" ]; then
+ for i in \
+ `busybox find /data/ -iname "*.db"` 
+ do \
+    /system/xbin/sqlite3 $i 'VACUUM;' 
+    /system/xbin/sqlite3 $i 'REINDEX;' 
+ done
+fi
+
+if [ -d "/sdcard" ];then
+ for i in \
+ `busybox find /sdcard/ -iname "*.db"` 
+ do \
+    /system/xbin/sqlite3 $i 'VACUUM;' 
+    /system/xbin/sqlite3 $i 'REINDEX;' 
+ done
+fi
+
+echo "" | busybox tee -a $LOG_FILE
+echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) database optimization done." | busybox tee -a $LOG_FILE

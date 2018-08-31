@@ -1,0 +1,165 @@
+#!/system/bin/sh
+
+# settings put global captive_portal_detection_enabled 0
+
+if [ ! -e /system/build.prop.bk ]; then
+    busybox mount -o remount,rw  /system
+    cp /system/build.prop /system/build.prop.bk
+    echo | busybox tee -a /system/build.prop
+    cat $0 | busybox grep '^setprop' | busybox awk '{print $2 "=" $3}' | busybox tee -a /system/build.prop
+fi
+
+LOG_FILE=/data/local/07prop.log
+busybox rm -f $LOG_FILE
+busybox touch $LOG_FILE
+
+# busybox sed -i 's/wifi.supplicant_scan_interval=15/wifi.supplicant_scan_interval=240/g' /system/build.prop
+# busybox sed -i 's/debug.composition.type=dyn/debug.composition.type=gpu/g' /system/build.prop
+busybox sed -i "s/\(^wifi.supplicant_scan_interval\)/#\1/" /system/build.prop
+busybox sed -i "s/\(^debug.composition.type\)/#\1/" /system/build.prop
+busybox sed -i "s/\(^persist.hwc.mdpcomp.enable\)/#\1/" /system/build.prop
+
+# setprop dalvik.vm.heapstartsize 8m
+# setprop dalvik.vm.heapgrowthlimit 192m
+# setprop dalvik.vm.heapsize 512m
+# setprop dalvik.vm.heaptargetutilization 0.75
+# setprop dalvik.vm.heapmaxfree 8m
+# setprop dalvik.vm.heapminfree 512k
+
+# setprop qemu.hw.mainkeys 0
+# Dalvik Tweak
+# setprop dalvik.vm.heapstartsize 16m
+# setprop dalvik.vm.heapsize 512m
+# setprop dalvik.vm.heapmaxfree 16m
+# setprop dalvik.vm.heapminfree 2m
+
+# setprop dalvik.vm.dexopt-flags m=y,v=n,o=v,u=n
+# setprop dalvik.vm.execution-mode int:jit
+# setprop dalvik.vm.jniopts forcecopy
+# setprop dalvik.vm.checkjni false
+# setprop dalvik.vm.verify-bytecode false
+
+# GPU Tweak
+setprop debug.egl.hw 1
+setprop debug.egl.profiler 1
+setprop debug.sf.hw 1
+setprop hw3d.force 1
+setprop video.accelerate.hw 1
+setprop debug.performance.tuning 1
+setprop debug.composition.type gpu
+setprop persist.sys.ui.hw true
+setprop hwui.disable_vsync true
+setprop ro.config.hw_fast_dormancy 1
+setprop hwui.render_dirty_regions false
+
+setprop persist.android.strictmode 0
+# setprop persist.sys.use_16bpp_alpha 1
+# setprop persist.sampling_profiler 0
+# setprop persist.sys.use_dithering 0
+# setprop persist.radio.parsedump 0
+# setprop persist.radio.ramdump_sdcard 0
+# 位图
+# setprop persist.sys.purgeable_assets 1
+
+# Error Checking
+setprop debug.mdpcomp.logs 0
+setprop persist.hwc.mdpcomp.enable false
+setprop logcat.live disable
+setprop profiler.force_disable_err_rpt 1
+setprop profiler.force_disable_ulog 1
+setprop ro.config.nocheckin 1
+setprop ro.kernel.android.checkjni 0
+setprop ro.kernel.checkjni 0
+
+setprop debugtool.anrhistory 0
+setprop profiler.debugmonitor false
+setprop profiler.launch false
+setprop profiler.hung.dumpdobugreport false
+setprop ro.fast.dormancy 1
+setprop ro.ril.fast.dormancy.rule 1
+setprop persist.radio.data_no_toggle 1
+setprop ro.com.google.networklocation 0
+
+# Media
+# setprop ro.media.enc.jpeg.quality 100
+# setprop ro.media.dec.jpeg.memcap   8000000
+# setprop ro.media.enc.hprof.vid.bps 8000000
+# setprop mmp.enable.3g2 true
+# setprop media.stagefright.enable-aac true
+# setprop media.stagefright.enable-fma2dp true
+# setprop media.stagefright.enable-http true
+# setprop media.stagefright.enable-player true
+# setprop media.stagefright.enable-qcp true
+# setprop media.stagefright.enable-scan true
+# setprop media.stagefright.enable-meta true 
+# setprop media.stagefright.enable-record true
+
+# Qualcomm
+# setprop debug.qc.hardware true
+# setprop debug.qctwa.preservebuf 1
+# setprop debug.qctwa.statusbar 1
+
+# Battery Life
+# setprop pm.sleep_mode 1
+# setprop ro.ril.disable.power.collapse 0
+setprop wifi.supplicant_scan_interval 180
+# setprop wifi.supplicant_scan_interval 120
+
+# Scrolling Responsiveness
+# setprop windowsmgr.max_events_per_sec 90
+# setprop windowsmgr.max_events_per_sec 180
+# setprop persist.sys.scrollingcache 4
+# setprop ro.max.fling_velocity 25000
+# setprop ro.min.fling_velocity 20000
+
+# Other
+# setprop ro.config.notification_sound Pollux.ogg
+# setprop ro.config.ringtone Playtime.ogg
+# setprop ro.secure 0
+# setprop ro.HOME_APP_ADJ 1
+# setprop ro.telephony.call_ring.delay 0
+# setprop ro.lge.proximity.delay 10  #dialer
+# setprop mot.proximity.delay 10     #dialer
+
+# wiui
+# setprop persist.ril.uart.flowctrl 10
+# setprop ro.ril.transmitpower true
+# setprop ro.ril.hsxpa 3
+# setprop ro.ril.gprsclass 12
+# setprop ro.ril.hep 1
+# setprop ro.ril.hsdpa.category 8
+# setprop ro.ril.enable.3g.prefix 1
+# setprop ro.ril.htcmaskw1.bitmask 4294967295
+# setprop ro.ril.htcmaskw1 14449
+# setprop ro.ril.hsupa.category 6
+# setprop ro.ril.def.agps.mode 2
+# setprop ro.ril.def.agps.feature 1
+# setprop ro.ril.enable.sdr 1
+# setprop ro.ril.enable.gea3 1
+# setprop ro.ril.enable.fd.plmn.prefix 23402,23410,23411
+# setprop ro.ril.enable.a52 0
+# setprop ro.ril.enable.a53 0
+# setprop ro.ril.enable.dtm 0
+
+# setprop net.hostname android-mars
+setprop net.dns1 223.5.5.5
+setprop net.dns2 114.114.114.114
+# setprop net.rmnet0.dns1 223.5.5.5
+# setprop net.rmnet0.dns2 114.114.114.114
+
+setprop net.tcp.buffersize.default  4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.edge     4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.evdo     4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.gprs     4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.hsdpa    4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.hspa     4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.lte      4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.umts     4096,87380,256960,4096,16384,256960
+setprop net.tcp.buffersize.wifi     4096,87380,256960,4096,16384,256960
+
+# liquid ui
+setprop persist.service.lgospd.enable 0
+setprop persist.service.pcsync.enable 0
+#-----------------------------------------------------   
+echo "" | busybox tee -a $LOG_FILE
+echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) prop tweak done!!!" | busybox tee -a $LOG_FILE

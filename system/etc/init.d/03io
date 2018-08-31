@@ -1,0 +1,96 @@
+#!/system/bin/sh
+
+LOG_FILE=/data/local/03io.log
+busybox rm -f $LOG_FILE
+busybox touch $LOG_FILE
+
+#noop deadline row cfq
+scheduler="deadline"
+chmod 666 /sys/block/mmcblk0/queue/scheduler
+echo "$scheduler" > /sys/block/mmcblk0/queue/scheduler
+chmod 444 /sys/block/mmcblk0/queue/scheduler
+
+# Remount all partitions with noatime
+# for k in $(busybox mount | busybox grep relatime  | busybox cut -d " " -f3); do
+#   busybox mount -o remount,noatime $k
+# done
+
+# busybox mount -o remount,nosuid,nodev,noatime,nodiratime /
+# busybox mount -o remount,nosuid,nodev,noatime,nodiratime /proc
+# busybox mount -o remount,nosuid,nodev,noatime,nodiratime /sys
+# busybox mount -o remount,nosuid,nodev,noatime,nodiratime /sys/kernel/debug
+busybox mount -o remount,nosuid,nodev,noatime,nodiratime,noauto_da_alloc,discard,barrier=0 /data
+busybox mount -o remount,nosuid,nodev,noatime,nodiratime,noauto_da_alloc,discard,barrier=0 /cache
+busybox mount -o remount,nodev,noatime,nodiratime,noauto_da_alloc,discard,barrier=0  /system
+
+# if [ -e /system/xbin/fstrim ]; then
+#   fstrim -v /cache    | busybox tee -a $LOG_FILE
+#   fstrim -v /data     | busybox tee -a $LOG_FILE
+#   fstrim -v /system   | busybox tee -a $LOG_FILE
+#
+#   echo "" | tee -a $LOG_FILE
+#   echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) fstrim tweak done." | busybox tee -a $LOG_FILE
+# fi
+
+for i in /sys/block/*/queue; do
+  #echo "512" > $i/nr_requests
+  #echo "512" > $i/read_ahead_kb
+  echo "8192" > $i/nr_requests
+  echo "256" > $i/read_ahead_kb
+  echo "0" > $i/iostats
+  echo "2" > $i/rq_affinity
+  echo "0" > $i/nomerges
+  echo "0" > $i/add_random
+  echo "0" > $i/rotational
+  #deadline 
+  if [ -d $i/iosched/ ]; then
+    echo "4" > $i/iosched/fifo_batch 
+    echo "4" > $i/iosched/writes_starved
+  fi
+done
+
+
+READAHEADKB="2048"
+#chmod 777 > /sys/devices/virtual/bdi/0:18/read_ahead_kb
+if [ -e /sys/devices/virtual/bdi/0:19/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/0:19/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/0:20/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/0:20/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/0:21/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/0:21/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/179:0/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/179:0/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:0/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:0/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:1/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:1/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:2/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:2/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:3/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:3/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:4/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:4/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:5/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:5/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:6/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:6/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/7:7/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/7:7/read_ahead_kb
+fi
+if [ -e /sys/devices/virtual/bdi/default/read_ahead_kb ]; then
+    echo $READAHEADKB > /sys/devices/virtual/bdi/default/read_ahead_kb
+fi
+
+echo "" | busybox tee -a $LOG_FILE
+echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) i/o tweak done." | busybox tee -a $LOG_FILE

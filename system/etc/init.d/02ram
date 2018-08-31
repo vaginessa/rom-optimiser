@@ -1,0 +1,25 @@
+#!/system/bin/sh
+
+LOG_FILE=/data/local/02ram.log
+busybox rm -f $LOG_FILE
+busybox touch $LOG_FILE
+
+echo "0" > /sys/module/lowmemorykiller/parameters/debug_level
+echo "1" > /sys/module/lowmemorykiller/parameters/lmk_fast_run
+
+# echo "0,1,3,5,7,15" > /sys/module/lowmemorykiller/parameters/adj
+# echo "64" > /sys/module/lowmemorykiller/parameters/cost
+
+# fly-on mod
+# echo "0,1,3,5,7,15" > /sys/module/lowmemorykiller/parameters/adj
+# 512M
+# echo "1408,2816,3755,7040,9387,12288" > /sys/module/lowmemorykiller/parameters/minfree;	
+# 1G
+# echo "2560,4096,6144,12288,14336,18432" > /sys/module/lowmemorykiller/parameters/minfree;
+# 2G
+# echo "6144,11520,16540,22400,28165,41418" > /sys/module/lowmemorykiller/parameters/minfree;  
+# > 2G
+echo "6144,11520,16540,22400,28165,41418" > /sys/module/lowmemorykiller/parameters/minfree;  
+
+echo "" | busybox tee -a $LOG_FILE
+echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) ram tweak done." | busybox tee -a $LOG_FILE

@@ -1,0 +1,23 @@
+#!/system/bin/sh
+
+LOG_FILE=/data/local/06clean.log
+busybox rm -f $LOG_FILE
+busybox touch $LOG_FILE
+
+# may make bootloop
+
+#busybox rm -f /data/anr/*.*
+#busybox rm -f /data/system/dropbox/*.txt
+#busybox rm -f /data/backup/pending/*.tmp
+#busybox rm -rf /data/tombstones/*
+#busybox rm -rf /data/system/usagestats/*
+
+#busybox rm -rf /data/system/dropbox/*
+#chmod 400 /data/system/dropbox
+
+#busybox rm -rf /data/system/usagestats/*
+#chmod 400 /data/system/usagestats
+
+echo "" | busybox tee -a $LOG_FILE
+echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) autoclean done." | busybox tee -a $LOG_FILE
+

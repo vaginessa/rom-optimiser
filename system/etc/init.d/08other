@@ -1,0 +1,43 @@
+#!/system/bin/sh
+
+LOG_FILE=/data/local/08other.log
+busybox rm -f $LOG_FILE
+busybox touch $LOG_FILE
+
+if [[ -z `busybox cat /etc/init.qcom.post_boot.sh | grep 'busybox run-parts /system/etc/init.d/'` ]];then
+    busybox echo "busybox run-parts /system/etc/init.d/" | busybox tee -a /system/etc/init.qcom.post_boot.sh
+fi
+
+if [ -e /system/xbin/rngd ]; then
+    busybox rm -f /data/rngd.pid
+    rngd -t 2 -T 1 -s 256 --fill-watermark=80%
+    sleep 2
+    echo -8 > /proc/$(busybox pgrep rngd)/oom_adj
+    busybox renice 5 `busybox pidof rngd`
+    echo "" | busybox tee -a $LOG_FILE
+    echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) entropy tweak done." | busybox tee -a $LOG_FILE
+fi
+#if [ -n `busybox ps | busybox grep qrngd | busybox grep -v grep` ]; then
+    #echo "--> qrngd already running! " | busybox tee -a $LOG_FILE
+    #exit 1
+#else
+    #rngd -t 2 -T 1 -s 256 --fill-watermark=80%
+    #sleep 2
+    #echo -8 > /proc/$(pgrep rngd)/oom_adj
+    #busybox renice 5 `busybox pidof rngd`
+    #echo "" | busybox tee -a $LOG_FILE
+    #echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) entropy tweak done!!!" | busybox tee -a $LOG_FILE
+#fi
+
+busybox killall -9 android.process.media
+busybox killall -9 mediaserver 
+busybox killall -9 com.google.android.gms
+busybox killall -9 com.google.android.gsf
+
+echo "" | busybox tee -a $LOG_FILE
+echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) kill mediaserver done." | busybox tee -a $LOG_FILE
+
+setenforce 0
+echo "0" > /sys/fs/selinux/enforce
+echo "" | busybox tee -a $LOG_FILE
+echo "==> $( date +"%m-%d-%Y %H:%M:%S" ) other tweak done." | busybox tee -a $LOG_FILE
