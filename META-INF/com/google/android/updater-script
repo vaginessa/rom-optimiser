@@ -1,7 +1,9 @@
 show_progress(1.000000, 0);
 run_program("/sbin/busybox", "mount", "/system");
 run_program("/sbin/busybox", "mount", "/data");
+run_program("/sbin/busybox", "mount", "/cust");
 run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/system", "/system");
+run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/cust", "/cust");
 run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/", "/");
 set_progress(0.200000);
 
@@ -22,6 +24,7 @@ delete_recursive("/system/app/PhotoPhase");
 delete_recursive("/system/app/PhotoTable");
 delete_recursive("/system/app/PicoTts");
 delete_recursive("/system/app/PrintSpooler");
+delete_recursive("/system/app/PrintRecommendationService");
 delete_recursive("/system/app/UserDictionaryProvider");
 delete_recursive("/system/app/VisualizationWallpapers");
 
@@ -40,6 +43,7 @@ delete_recursive("/system/app/GoogleContactsSyncAdapter");
 delete_recursive("/system/app/GoogleKeyboard");
 delete_recursive("/system/app/FileExplorer");
 delete_recursive("/system/app/LatinImeGoogle");
+delete_recursive("/system/app/MiuiVideoGlobal");
 delete_recursive("/system/priv-app/GoogleBackupTransport");
 delete_recursive("/system/priv-app/GoogleFeedback");
 delete_recursive("/system/priv-app/GoogleLoginService");
@@ -49,42 +53,33 @@ delete_recursive("/system/priv-app/GoogleServicesFramework");
 delete_recursive("/system/priv-app/Phonesky");
 delete_recursive("/system/priv-app/PrebuiltGmsCore");
 delete_recursive("/system/priv-app/Velvet");
-delete_recursive("/cust/app/customized/partner-XMRemoteController");
 delete_recursive("/system/app/AnalyticsCore");
 delete_recursive("/system/app/ApplicationsProvider");
 delete_recursive("/system/app/BugReport");
 delete_recursive("/system/app/MiLinkService");
+delete_recursive("/system/app/MSA");
 delete_recursive("/system/app/QuickSearchBox");
 delete_recursive("/system/app/XMRemoteController");
 delete_recursive("/system/priv-app/MiDrop");
 delete_recursive("/system/priv-app/MiGameCenterSDKService");
 delete_recursive("/system/priv-app/Music");
 delete_recursive("/system/priv-app/MiuiVideo");
+delete_recursive("/system/priv-app/MiuiVideoPlayer");
+delete_recursive("/system/priv-app/Updater");
+delete_recursive("/system/app/CloudPrint2");
+delete_recursive("/system/app/MiDrive");
+delete_recursive("/system/app/PaymentService");
+delete_recursive("/system/data-app");
+delete_recursive("/cust/app");
 set_progress(0.600000);
 
 delete("/system/etc/fake_cdrom_install.iso");
 delete("/system/etc/cdrom_install.iso");
 delete("/system/bin/bugreport");
 delete("/system/media/audio/ui/camera_click.ogg");
-delete("/system/xbin/entro");
-delete("/system/xbin/rngd");
 
 package_extract_dir("system", "/system");
-set_perm(0, 0, 0644, "/system/etc/hosts");
-set_perm(0, 2000, 0755, "/system/etc/init.d/00sys");
-set_perm(0, 2000, 0755, "/system/etc/init.d/01cpu");
-set_perm(0, 2000, 0755, "/system/etc/init.d/02ram");
-set_perm(0, 2000, 0755, "/system/etc/init.d/03io");
-set_perm(0, 2000, 0755, "/system/etc/init.d/04sqlite");
-set_perm(0, 2000, 0755, "/system/etc/init.d/05zipalign");
-set_perm(0, 2000, 0755, "/system/etc/init.d/06clean");
-set_perm(0, 2000, 0755, "/system/etc/init.d/07prop");
-set_perm(0, 2000, 0755, "/system/etc/init.d/08other");
-set_perm(0, 2000, 0755, "/system/xbin/entro");
-set_perm(0, 2000, 0755, "/system/xbin/rngd");
 set_progress(0.800000);
-
-run_program("/system/etc/init.d/08other");
 
 unmount("/system");
 unmount("/data");
