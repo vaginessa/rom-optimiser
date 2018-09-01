@@ -1,86 +1,70 @@
-show_progress(1.000000, 0);
+show_progress(0.1, 0);
+ui_print("--------------------------------------- ");
+ui_print("             Rom Optimiser              ");
+ui_print("--------------------------------------- ");
+ui_print ("==> tweak start");
+
 run_program("/sbin/busybox", "mount", "/system");
 run_program("/sbin/busybox", "mount", "/data");
 run_program("/sbin/busybox", "mount", "/cust");
 run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/system", "/system");
 run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/cust", "/cust");
 run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/", "/");
-set_progress(0.200000);
+set_progress(0.2);
 
-delete_recursive("/system/app/BasicDreams");
-delete_recursive("/system/app/Browser");
-delete_recursive("/system/app/Eleven");
+delete_recursive("/system/app/BookmarkProvider");
+delete_recursive("/system/app/BugReport");
+delete_recursive("/system/app/Cit");
+delete_recursive("/system/app/CloudPrint2");
 delete_recursive("/system/app/Email");
-delete_recursive("/system/app/Exchange2");
-delete_recursive("/system/app/Galaxy4");
-delete_recursive("/system/app/GoogleIntl");
-delete_recursive("/system/app/HoloSpiralWallpaper");
-delete_recursive("/system/app/LatinIME");
-delete_recursive("/system/app/LiveWallpapers");
+delete_recursive("/system/app/FileExplorer");
 delete_recursive("/system/app/LiveWallpapersPicker");
-delete_recursive("/system/app/MoKeePay");
-delete_recursive("/system/app/PhaseBeam");
-delete_recursive("/system/app/PhotoPhase");
-delete_recursive("/system/app/PhotoTable");
-delete_recursive("/system/app/PicoTts");
-delete_recursive("/system/app/PrintSpooler");
-delete_recursive("/system/app/PrintRecommendationService");
-delete_recursive("/system/app/UserDictionaryProvider");
-delete_recursive("/system/app/VisualizationWallpapers");
-
-delete_recursive("/system/priv-app/CMUpdater");
-delete_recursive("/system/priv-app/BackupRestoreConfirmation");
-
-delete_recursive("/system/app/GoogleTTS");
+delete_recursive("/system/app/MetokNLP");
+delete_recursive("/system/app/MiDrive");
 delete_recursive("/system/app/MiGalleryLockscreen");
-delete_recursive("/system/app/talkback");
-delete_recursive("/system/app/Updater");
-delete_recursive("/system/priv-app/QuickSearchBox");
-set_progress(0.400000);
+delete_recursive("/system/app/MiLinkService");
+delete_recursive("/system/app/MiuiVideoGlobal");
+delete_recursive("/system/app/ModemTestMode");
+delete_recursive("/system/app/PacProcessor");
+delete_recursive("/system/app/PaymentService");
+delete_recursive("/system/app/PrintRecommendationService");
+delete_recursive("/system/app/PrintSpooler");
+delete_recursive("/system/app/UserDictionaryProvider");
+delete_recursive("/system/app/WallpaperBackup");
+
+delete_recursive("/system/priv-app/BackupRestoreConfirmation");
+delete_recursive("/system/priv-app/CallLogBackup");
+delete_recursive("/system/priv-app/Phonesky");
+delete_recursive("/system/priv-app/PrebuiltGmsCore");
+delete_recursive("/system/priv-app/Music");
+delete_recursive("/system/priv-app/Updater");
 
 delete_recursive("/system/app/GoogleCalendarSyncAdapter");
 delete_recursive("/system/app/GoogleContactsSyncAdapter");
 delete_recursive("/system/app/GoogleKeyboard");
-delete_recursive("/system/app/FileExplorer");
-delete_recursive("/system/app/LatinImeGoogle");
-delete_recursive("/system/app/MiuiVideoGlobal");
 delete_recursive("/system/priv-app/GoogleBackupTransport");
 delete_recursive("/system/priv-app/GoogleFeedback");
 delete_recursive("/system/priv-app/GoogleLoginService");
 delete_recursive("/system/priv-app/GoogleOneTimeInitializer");
 delete_recursive("/system/priv-app/GooglePartnerSetup");
 delete_recursive("/system/priv-app/GoogleServicesFramework");
-delete_recursive("/system/priv-app/Phonesky");
-delete_recursive("/system/priv-app/PrebuiltGmsCore");
-delete_recursive("/system/priv-app/Velvet");
-delete_recursive("/system/app/AnalyticsCore");
-delete_recursive("/system/app/ApplicationsProvider");
-delete_recursive("/system/app/BugReport");
-delete_recursive("/system/app/MiLinkService");
-delete_recursive("/system/app/MSA");
-delete_recursive("/system/app/QuickSearchBox");
-delete_recursive("/system/app/XMRemoteController");
-delete_recursive("/system/priv-app/MiDrop");
-delete_recursive("/system/priv-app/MiGameCenterSDKService");
-delete_recursive("/system/priv-app/Music");
-delete_recursive("/system/priv-app/MiuiVideo");
-delete_recursive("/system/priv-app/MiuiVideoPlayer");
-delete_recursive("/system/priv-app/Updater");
-delete_recursive("/system/app/CloudPrint2");
-delete_recursive("/system/app/MiDrive");
-delete_recursive("/system/app/PaymentService");
+
 delete_recursive("/system/data-app");
 delete_recursive("/cust/app");
-set_progress(0.600000);
+set_progress(0.4);
 
-delete("/system/etc/fake_cdrom_install.iso");
-delete("/system/etc/cdrom_install.iso");
 delete("/system/bin/bugreport");
 delete("/system/media/audio/ui/camera_click.ogg");
+run_program("/sbin/sh", "-c", "sed -i 's:ro.qualcomm.cabl=.*:ro.qualcomm.cabl=1:' /system/build.prop");
+run_program("/sbin/sh", "-c", "sed -i 's:qemu.hw.mainkeys=.*:qemu.hw.mainkeys=0:' /system/build.prop");
+set_progress(0.6);
 
 package_extract_dir("system", "/system");
-set_progress(0.800000);
+set_progress(0.8);
 
 unmount("/system");
 unmount("/data");
-set_progress(1.000000);
+unmount("/cust");
+
+ui_print ("==> tweak finish :)");
+set_progress(1.0);
