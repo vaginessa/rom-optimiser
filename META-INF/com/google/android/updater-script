@@ -2,8 +2,9 @@ show_progress(0.1, 0);
 ui_print("--------------------------------------- ");
 ui_print("             Rom Optimiser              ");
 ui_print("--------------------------------------- ");
-ui_print ("==> tweak start");
+ui_print ("- Tweak start");
 
+ui_print ("- Mount /system /data /cust");
 run_program("/sbin/busybox", "mount", "/system");
 run_program("/sbin/busybox", "mount", "/data");
 run_program("/sbin/busybox", "mount", "/cust");
@@ -12,6 +13,7 @@ run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/cust", "/cust");
 run_program("/sbin/busybox", "mount", "-o", "rw,remount", "/", "/");
 set_progress(0.2);
 
+ui_print ("- Delete unused app");
 delete_recursive("/system/app/BookmarkProvider");
 delete_recursive("/system/app/BugReport");
 delete_recursive("/system/app/Cit");
@@ -29,15 +31,19 @@ delete_recursive("/system/app/PacProcessor");
 delete_recursive("/system/app/PaymentService");
 delete_recursive("/system/app/PrintRecommendationService");
 delete_recursive("/system/app/PrintSpooler");
+delete_recursive("/system/app/Stk");
 delete_recursive("/system/app/UserDictionaryProvider");
 delete_recursive("/system/app/WallpaperBackup");
+delete_recursive("/system/app/XiaomiSimActivateService");
 
 delete_recursive("/system/priv-app/BackupRestoreConfirmation");
 delete_recursive("/system/priv-app/CallLogBackup");
+delete_recursive("/system/priv-app/Music");
 delete_recursive("/system/priv-app/Phonesky");
 delete_recursive("/system/priv-app/PrebuiltGmsCore");
-delete_recursive("/system/priv-app/Music");
+delete_recursive("/system/priv-app/QuickSearchBox");
 delete_recursive("/system/priv-app/Updater");
+delete_recursive("/system/priv-app/YellowPage");
 
 delete_recursive("/system/app/GoogleCalendarSyncAdapter");
 delete_recursive("/system/app/GoogleContactsSyncAdapter");
@@ -53,18 +59,21 @@ delete_recursive("/system/data-app");
 delete_recursive("/cust/app");
 set_progress(0.4);
 
+ui_print ("- Modify build.prop");
 delete("/system/bin/bugreport");
 delete("/system/media/audio/ui/camera_click.ogg");
 run_program("/sbin/sh", "-c", "sed -i 's:ro.qualcomm.cabl=.*:ro.qualcomm.cabl=1:' /system/build.prop");
 run_program("/sbin/sh", "-c", "sed -i 's:qemu.hw.mainkeys=.*:qemu.hw.mainkeys=0:' /system/build.prop");
 set_progress(0.6);
 
+ui_print ("- Extract system");
 package_extract_dir("system", "/system");
 set_progress(0.8);
 
+ui_print ("- Unmount /system /data /cust");
 unmount("/system");
 unmount("/data");
 unmount("/cust");
 
-ui_print ("==> tweak finish :)");
+ui_print ("- Tweak finish :)");
 set_progress(1.0);
