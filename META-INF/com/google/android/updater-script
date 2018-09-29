@@ -20,6 +20,8 @@ delete_recursive("/system/app/Cit");
 delete_recursive("/system/app/CloudPrint2");
 delete_recursive("/system/app/Email");
 delete_recursive("/system/app/FileExplorer");
+delete_recursive("/system/app/HybridAccessory");
+delete_recursive("/system/app/HybridPlatform");
 delete_recursive("/system/app/LiveWallpapersPicker");
 delete_recursive("/system/app/MetokNLP");
 delete_recursive("/system/app/MiDrive");
@@ -38,6 +40,7 @@ delete_recursive("/system/app/XiaomiSimActivateService");
 
 delete_recursive("/system/priv-app/BackupRestoreConfirmation");
 delete_recursive("/system/priv-app/CallLogBackup");
+delete_recursive("/system/priv-app/CellBroadcastReceiver");
 delete_recursive("/system/priv-app/Music");
 delete_recursive("/system/priv-app/Phonesky");
 delete_recursive("/system/priv-app/PrebuiltGmsCore");
